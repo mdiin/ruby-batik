@@ -3,6 +3,7 @@ module Batik
     import org.apache.batik.transcoder.TranscodingHints
     import org.apache.batik.transcoder.TranscoderInput
     import org.apache.batik.transcoder.TranscoderOutput
+    import java.awt.Color
     class Abstract
       def self.java_types
         {
@@ -31,6 +32,7 @@ module Batik
           :max_width => nil,
           :height => nil,
           :width => nil,
+          :background_color => nil, # Array of RGB ( [255, 255, 255] ) or RGBA ( [255, 255, 255, 255] )
 
           # Non-Batik options
           :base_uri => nil # Document URI for relative path lookups
@@ -50,7 +52,13 @@ module Batik
         options.each_pair do |key, val|
           next if val.nil?
 
-          transcoder.addTranscodingHint(transcoder.class.const_get("key_#{key}".upcase), val.to_java(java_type_for(key)))
+          value = if key == :background_color
+                    Color.new(val[0], val[1], val[2], val[3])
+                  else
+                    val.to_java(java_type_for(key))
+                  end
+
+          transcoder.addTranscodingHint(transcoder.class.const_get("key_#{key}".upcase), value)
         end
 
         transcoder.transcode(t_input, TranscoderOutput.new(out_io.to_outputstream))
