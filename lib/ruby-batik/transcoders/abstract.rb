@@ -53,7 +53,11 @@ module Batik
           next if val.nil?
 
           value = if key == :background_color
-                    Color.new(val[0], val[1], val[2], val[3])
+                    if val.count == 3
+                      Color.new(val[0], val[1], val[2])
+                    else
+                      Color.new(val[0], val[1], val[2], val[3])
+                    end
                   else
                     val.to_java(java_type_for(key))
                   end
