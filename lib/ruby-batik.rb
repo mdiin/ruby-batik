@@ -1,5 +1,5 @@
 require 'java'
-require 'batik'
+#require 'batik'
 require 'stringio'
 
 require 'ruby-batik/version'
